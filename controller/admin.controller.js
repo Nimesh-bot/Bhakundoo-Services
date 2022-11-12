@@ -42,15 +42,13 @@ const addCategory = async (req, res) => {
 
 const addProduct = async (req, res) => {
     const product = req.body;
-    const arr = []
-    const gal = {}
+    var arr = []
+    var gal = {}
 
     try {
         if(req.files) {
-            console.log(req.files)
-
             for(var i=0; i<req.files.length; i++) {
-                const tempPath = req.files[i].path;
+                var tempPath = req.files[i].path;
                 await cloudinary.v2.uploader.upload(
                     tempPath,
                     async function(error, result){
@@ -61,14 +59,15 @@ const addProduct = async (req, res) => {
                         });
                     }
                 )
-                const new_gal = new Gallery(gal);
-                const gall = await new_gal.save();
+                var new_gal = new Gallery(gal);
+                var gall = await new_gal.save();
                 arr.push(gall._id);
             }
         }
         product["gallery"] = arr;
 
-        product["slug"] = product.name.toLowerCase().split(' ').join('-') + '-' + Math.random().toString(36).substr(2, 9);
+        var availableSlug = product.name.toLowerCase().split(' ').join('-') + '-' + Math.random().toString(36).substr(2, 9)
+        product["slug"] = availableSlug.replace('/', '-');
         
         const newProduct = new Product(product);
         await newProduct.save();

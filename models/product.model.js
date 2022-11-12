@@ -16,12 +16,12 @@ const product = new mongoose.Schema({
     gallery: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'gallery'
+            ref: 'Gallery'
         }
     ],
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'category',
+        ref: 'Category',
         required: [true, 'Please provide a category']
     },
     stock: {
