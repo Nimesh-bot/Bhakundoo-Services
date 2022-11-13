@@ -21,6 +21,7 @@ app.use(cors({
 
 app.use('/', require('./routes/public.route'));
 app.use('/admin', require('./routes/admin.route'));
+app.use('/auth', require('./routes/auth.route'));
 
 // app.use((req, res) => {
 //     res.status(404).send('Not Found');
