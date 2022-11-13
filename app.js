@@ -2,6 +2,9 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 
+const cookieParser = require('cookie-parser')
+
+
 require('dotenv').config({ path: './.env' });
 
 const app = express();
