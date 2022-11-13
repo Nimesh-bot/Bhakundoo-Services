@@ -1,7 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-
+const morgan = require('morgan');
 const cookieParser = require('cookie-parser')
 
 
@@ -14,6 +14,7 @@ mongooseConnect.connect;
 
 app.use(helmet());
 app.use(express.json());
+app.use(morgan('dev'));
 app.use(cors({
     origin: '*', // allow to server to accept request from different origin
 }));

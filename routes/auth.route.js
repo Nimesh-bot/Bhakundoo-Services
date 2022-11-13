@@ -1,5 +1,5 @@
 const express = require('express');
-const { facebookLogin } = require('../controller/auth.controller');
+const { googleLogin } = require('../controller/auth.controller');
 
 const route = express.Router();
 
@@ -9,5 +9,5 @@ route.get('/', (req, res) => {
     })
 })
 
-route.get('/facebook-login', facebookLogin);
+route.post('/google-login', googleLogin);
 module.exports = route;

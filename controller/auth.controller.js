@@ -1,18 +1,27 @@
 const Users = require('../models/user.model')
+const fetch = require('node-fetch')
+const bcrypt = require('bcrypt')
+const {google} = require('googleapis')
+const {OAuth2} = google.auth
+const MAILING_SERVICE_CLIENT_ID = process.env.MAILING_SERVICE_CLIENT_ID
+const client = new OAuth2(MAILING_SERVICE_CLIENT_ID)
+const jwt = require('jsonwebtoken')
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
+const GOOGLE_SECRET = process.env.GOOGLE_SECRET
 
-const facebookLogin = async (req, res) => {
+const googleLogin =  async (req, res) => {
     try {
-        const {accessToken, userID} = req.body
+        const {tokenId} = req.body
 
-        const URL = `https://graph.facebook.com/v2.9/${userID}/?fields=id,name,email,picture&access_token=${accessToken}`
+        const verify = await client.verifyIdToken({idToken: tokenId, audience: MAILING_SERVICE_CLIENT_ID})
         
-        const data = await fetch(URL).then(res => res.json()).then(res => {return res})
+        const {email_verified, email, name, picture} = verify.payload
 
-        const {email, name, picture} = data
-
-        const password = email + FACEBOOK_SECRET
+        const password = email + GOOGLE_SECRET
 
         const passwordHash = await bcrypt.hash(password, 12)
+
+        if(!email_verified) return res.status(400).json({msg: "Email verification failed."})
 
         const user = await Users.findOne({email})
 
@@ -30,7 +39,7 @@ const facebookLogin = async (req, res) => {
             res.json({msg: "Login success!"})
         }else{
             const newUser = new Users({
-                name, email, password: passwordHash, avatar: picture.data.url
+                name, email, password: passwordHash, avatar: picture
             })
 
             await newUser.save()
@@ -51,10 +60,11 @@ const facebookLogin = async (req, res) => {
     }
 }
 
+
 const createRefreshToken = (payload) => {
     return jwt.sign(payload, REFRESH_TOKEN_SECRET, {expiresIn: '7d'})
 }
 
 module.exports = {
-    facebookLogin
+    googleLogin
 }
