@@ -1,4 +1,4 @@
-const User = require('../models/user.model')
+const Users = require('../models/user.model')
 
 const facebookLogin = async (req, res) => {
     try {
@@ -14,7 +14,7 @@ const facebookLogin = async (req, res) => {
 
         const passwordHash = await bcrypt.hash(password, 12)
 
-        const user = await User.findOne({email})
+        const user = await Users.findOne({email})
 
         if(user){
             const isMatch = await bcrypt.compare(password, user.password)
