@@ -5,7 +5,7 @@ const Product = require('../models/product.model');
 const getProducts = async (req, res) => {
     try {
         const products = await Product.find().populate([{path: 'gallery'}]);
-        console.log(products);
+        // console.log(products);
         res.status(200).json({
             message: 'Products fetched successfully',
             products
