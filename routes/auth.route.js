@@ -5,7 +5,7 @@ const route = express.Router();
 
 route.get('/', (req, res) => {
     res.status(200).json({
-        message: 'Welcome to the service of....'
+        message: 'Auth Route'
     })
 })
 
