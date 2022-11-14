@@ -24,4 +24,4 @@ const verifyRefresh = async(token)=>{
     return dec
 }
 
-module.exports = {verifyAccess, verifyRefresh, verifyOther}
+module.exports = {verifyAccess, verifyRefresh }

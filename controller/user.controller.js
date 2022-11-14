@@ -1,4 +1,20 @@
 const Cart = require('../models/cart.model')
+const User = require('../models/user.model')
+
+const fetchUserData = async (req, res) => {
+    try {
+        const user = await User.findOne(req.body.email.select('-password'));
+        res.status(200).json({
+            message: 'User fetched successfully',
+            user
+        })
+    }
+    catch(err) {
+        res.status(400).json({
+            message: err.message
+        });
+    }
+}
 
 const addToCart = async (req, res) => {
     const newCart = new Cart(req.body);
@@ -71,5 +87,6 @@ module.exports = {
     addToCart,
     updateCart,
     deleteCart,
-    getCart
+    getCart,
+    fetchUserData
 }
