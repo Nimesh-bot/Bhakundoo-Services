@@ -11,6 +11,9 @@ const category = new mongoose.Schema({
     },
     imageId: {
         type: String,
+    },
+    slug: {
+        type: String,
     }
 })
 

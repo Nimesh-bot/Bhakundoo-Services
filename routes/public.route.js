@@ -1,5 +1,5 @@
 const express = require('express');
-const { getCategories, getProducts, getFeaturedProducts, getProductBySlug } = require('../controller/public.controller');
+const { getCategories, getProducts, getFeaturedProducts, getProductBySlug, getProductsByCategories } = require('../controller/public.controller');
 
 const route = express.Router();
 
@@ -13,5 +13,6 @@ route.get('/products', getProducts);
 route.get('/products/featured', getFeaturedProducts);
 route.get('/product/:slug', getProductBySlug);
 route.get('/categories', getCategories);
+route.get('/products/category/:slug', getProductsByCategories);
 
 module.exports = route;

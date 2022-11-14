@@ -2,10 +2,12 @@ const Users = require('../models/user.model')
 const fetch = require('node-fetch')
 const bcrypt = require('bcrypt')
 const {google} = require('googleapis')
+const jwt = require('jsonwebtoken')
+
 const {OAuth2} = google.auth
 const MAILING_SERVICE_CLIENT_ID = process.env.MAILING_SERVICE_CLIENT_ID
 const client = new OAuth2(MAILING_SERVICE_CLIENT_ID)
-const jwt = require('jsonwebtoken')
+
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 const GOOGLE_SECRET = process.env.GOOGLE_SECRET
 

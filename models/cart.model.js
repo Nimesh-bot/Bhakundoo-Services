@@ -4,15 +4,15 @@ const cart = new mongoose.Schema(
     {
         userId: { type: String, required: true },
         products: [
-        {
-            productId: {
-            type: String,
+            {
+                productId: {
+                    type: String,
+                },
+                quantity: {
+                    type: Number,
+                    default: 1,
+                },
             },
-            quantity: {
-            type: Number,
-            default: 1,
-            },
-        },
         ],
     },
     {

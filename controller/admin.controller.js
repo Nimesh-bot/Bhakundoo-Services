@@ -27,6 +27,8 @@ const addCategory = async (req, res) => {
                 }
             )
         }
+        categories["slug"] = categories.name.toLowerCase().split(' ').join('-') + '-' + Math.random().toString(36).substr(2, 9);
+
         const newCategory = new Category(categories);
         await newCategory.save();
         res.status(200).json({

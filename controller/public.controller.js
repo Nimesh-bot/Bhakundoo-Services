@@ -19,7 +19,7 @@ const getProducts = async (req, res) => {
 }
 const getFeaturedProducts = async (req, res) => {
     try {
-        const products = await Product.find({isFeatured: true}).populate([{path: 'gallery'}, {path: 'category'}]);
+        const products = await Product.find({isFeatured: true}).populate([{path: 'gallery'}]).populate([{path: 'category'}]);
         res.status(200).json({
             message: 'Featured products fetched successfully',
             products
@@ -61,63 +61,16 @@ const getCategories = async (req, res) => {
     }
 }
 
-const addToCard = async (req, res) => {
-    const newCart = new Cart(req.body);
-
+const getProductsByCategories = async (req, res) => {
+    // get category slug through params and find product with id of that category
     try {
-        const cart = await newCart.save();
+        const category = await Category.findOne({slug: req.params.slug});
+        console.log(category);
+        const products = await Product.find({category: category._id}).populate([{path: 'gallery'}]);
         res.status(200).json({
-            message: 'Cart added successfully',
-            cart
-        });
-    }
-    catch(err) {
-        res.status(400).json({
-            message: err.message
-        });
-    }
-}
-
-const updateCart = async (req, res) => {
-    try {
-        const cart = await Cart.findByIdAndUpdate(
-            req.params.id,
-            {
-                $set: req.body,
-            },
-            { new: true }
-        );
-        res.status(200).json({
-            message: 'Cart updated successfully',
-            cart
-        });
-    }
-    catch(err) {
-        res.status(400).json({
-            message: err.message
-        });
-    }
-}
-const deleteCart = async (req, res) => {
-    try {
-        const cart = await Cart.findByIdAndDelete(req.params.id);
-        res.status(200).json({
-            message: 'Cart deleted successfully',
-            cart
-        });
-    }
-    catch(err) {
-        res.status(400).json({
-            message: err.message
-        });
-    }
-}
-const getCart = async (req, res) => {
-    try {
-        const cart = await Cart.find();
-        res.status(200).json({
-            message: 'Cart fetched successfully',
-            cart
+            message: 'Products fetched successfully',
+            category,
+            products
         });
     }
     catch(err) {
@@ -132,4 +85,5 @@ module.exports = {
     getCategories,
     getFeaturedProducts,
     getProductBySlug,
+    getProductsByCategories,
 }
