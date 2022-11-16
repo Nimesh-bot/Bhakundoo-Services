@@ -34,11 +34,11 @@ const googleLogin =  async (req, res) => {
             const refresh_token = createRefreshToken({id: user._id})
             res.cookie('refreshtoken', refresh_token, {
                 httpOnly: true,
-                path: '/user/refresh_token',
+                path: '/',
                 maxAge: 7*24*60*60*1000 // 7 days
             })
 
-            res.json({msg: "Login success!"})
+            res.json(user)
         }else{
             const newUser = new Users({
                 name, email, password: passwordHash, avatar: picture
@@ -49,7 +49,8 @@ const googleLogin =  async (req, res) => {
             const refresh_token = createRefreshToken({id: newUser._id})
             res.cookie('refreshtoken', refresh_token, {
                 httpOnly: true,
-                path: '/user/refresh_token',
+                
+                path: '/',
                 maxAge: 7*24*60*60*1000 // 7 days
             })
 

@@ -1,13 +1,15 @@
 const Cart = require('../models/cart.model')
 const User = require('../models/user.model')
 
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
+
 const fetchUserData = async (req, res) => {
     try {
-        const user = await User.findOne(req.body.email.select('-password'));
+        const user = await User.findOne({email: req.body.email});
         res.status(200).json({
             message: 'User fetched successfully',
             user
-        })
+        });
     }
     catch(err) {
         res.status(400).json({
@@ -83,10 +85,28 @@ const getCart = async (req, res) => {
     }
 }
 
+const getAccessToken = async(req, res) => {
+    try {
+        const rf_token = req.cookies.refreshtoken
+        console.log(req.cookies);
+        if(!rf_token) return res.status(400).json({msg: "Please login now!"})
+
+        jwt.verify(rf_token, REFRESH_TOKEN_SECRET, (err, user) => {
+            if(err) return res.status(400).json({msg: "Please login now!"})
+
+            const access_token = createAccessToken({id: user.id})
+            res.json({access_token})
+        })
+    } catch (err) {
+        return res.status(500).json({msg: err.message})
+    }
+}
+
 module.exports = {
     addToCart,
     updateCart,
     deleteCart,
     getCart,
-    fetchUserData
+    fetchUserData,
+    getAccessToken
 }
