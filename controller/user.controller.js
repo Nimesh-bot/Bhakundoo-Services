@@ -1,5 +1,7 @@
 const Cart = require('../models/cart.model')
 const User = require('../models/user.model')
+const jwt = require('jsonwebtoken')
+const { createAccessToken } = require('../middleware/auth.middleware')
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
