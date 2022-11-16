@@ -27,6 +27,10 @@ const user = new mongoose.Schema(
             type: String,
             default: 'https://i.pinimg.com/736x/b9/2c/55/b92c5560709fc3b68a9c82873804a3a4.jpg'
         },
+        cart: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Cart"
+        },
         isAdmin: {
             type: Boolean,
             default: false

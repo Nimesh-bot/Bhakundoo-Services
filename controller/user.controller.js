@@ -5,26 +5,33 @@ const { createAccessToken } = require('../middleware/auth.middleware')
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
-const fetchUserData = async (req, res) => {
-    try {
-        const user = await User.findOne({email: req.body.email});
-        res.status(200).json({
-            message: 'User fetched successfully',
-            user
-        });
-    }
-    catch(err) {
-        res.status(400).json({
-            message: err.message
-        });
-    }
-}
+// const fetchUserData = async (req, res) => {
+//     try {
+//         const user = await User.findOne({email: req.body.email});
+//         res.status(200).json({
+//             message: 'User fetched successfully',
+//             user
+//         });
+//     }
+//     catch(err) {
+//         res.status(400).json({
+//             message: err.message
+//         });
+//     }
+// }
 
 const addToCart = async (req, res) => {
-    const newCart = new Cart(req.body);
-
     try {
-        const cart = await newCart.save();
+        const user = await User.findById(req.user.aud)
+        const cart = await Cart.findById(user.cart)
+        if(!cart){
+            const newCart = new Cart(req.body.products[0]);
+            const cartt = await newCart.save()
+
+            const user_up = await user.updateOne({cart: cartt._id})
+            console.log(user_up)
+        }
+
         res.status(200).json({
             message: 'Cart added successfully',
             cart
@@ -109,6 +116,5 @@ module.exports = {
     updateCart,
     deleteCart,
     getCart,
-    fetchUserData,
     getAccessToken
 }

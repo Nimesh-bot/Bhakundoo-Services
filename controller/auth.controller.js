@@ -3,6 +3,9 @@ const fetch = require('node-fetch')
 const bcrypt = require('bcrypt')
 const {google} = require('googleapis')
 const jwt = require('jsonwebtoken')
+const userModel = require('../models/user.model')
+
+const { access_token } = require('../services/generateToken')
 
 const {OAuth2} = google.auth
 const MAILING_SERVICE_CLIENT_ID = process.env.MAILING_SERVICE_CLIENT_ID
@@ -32,18 +35,23 @@ const googleLogin =  async (req, res) => {
             const isMatch = await bcrypt.compare(password, user.password)
             if(!isMatch) return res.status(400).json({msg: "Password is incorrect."})
 
-            // const access_token = await access_token(user._id)
+            const accessToken = await access_token(user._id)
             // const refresh_token = await refresh_token(user._id)
 
-            const refresh_token = createRefreshToken({id: user._id})
-            res.cookie('refreshtoken', refresh_token, {
-                httpOnly: true,
-                path: '/',
-                maxAge: 7*24*60*60*1000,
-                domain: 'localhost:3000',
-                sameSite: 'None',
-                secure: false, // 7 days
-            }).json(user)
+            // const refresh_token = createRefreshToken({id: user._id})
+            // res.cookie('refreshtoken', refresh_token, {
+            //     httpOnly: true,
+            //     path: '/',
+            //     maxAge: 7*24*60*60*1000,
+            //     domain: 'localhost:3000',
+            //     sameSite: 'None',
+            //     secure: false, // 7 days
+            // }).json(user)
+
+            res.status(200).json({
+                user,
+                accessToken
+            })
 
             // res.json(user)
         }else{
@@ -59,7 +67,6 @@ const googleLogin =  async (req, res) => {
             const refresh_token = createRefreshToken({id: newUser._id})
             res.cookie('refreshtoken', refresh_token, {
                 httpOnly: true,
-                
                 path: '/',
                 maxAge: 7*24*60*60*1000,
                 domain: 'localhost:3000', 
@@ -72,6 +79,7 @@ const googleLogin =  async (req, res) => {
 
 
     } catch (err) {
+        console.log(err)
         return res.status(500).json({msg: err.message})
     }
 }

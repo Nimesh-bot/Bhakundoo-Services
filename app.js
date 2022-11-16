@@ -16,24 +16,24 @@ app.use(helmet());
 app.use(express.json());
 app.use(cookieParser())
 app.use(morgan('dev'));
-// app.use(cors({
-//     origin: '*', // allow to server to accept request from different origin
-//     credentials: true
-// }));
+app.use(cors({
+    origin: '*', // allow to server to accept request from different origin
+    credentials: true
+}));
 
-var whitelist = ['http://localhost:3000', /** other domains if any */ ]
-var corsOptions = {
-  credentials: true,
-  origin: function(origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+// var whitelist = ['http://localhost:3000', /** other domains if any */ ]
+// var corsOptions = {
+//   credentials: true,
+//   origin: function(origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.use('/', require('./routes/public.route'));
 app.use('/admin', require('./routes/admin.route'));
