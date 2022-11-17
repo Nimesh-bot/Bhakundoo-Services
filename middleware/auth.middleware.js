@@ -35,7 +35,6 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET
 const auth_user = (req, res, next) => {
     try {
         var token = req.header("Authorization")
-        console.log(token);
         if(!token) return res.status(400).json({msg: "Invalid."})
 
         if(token.startsWith("Bearer")){

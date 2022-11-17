@@ -21,20 +21,22 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 // }
 
 const addToCart = async (req, res) => {
+    const body = req.body[0]
     try {
         const user = await User.findById(req.user.aud)
-        const cart = await Cart.findById(user.cart)
+        // const cart = await Cart.findByIdAndDelete(user.cart)
+        const cart = await Cart.findByIdAndUpdate(user.cart, { "$push": { product: {product: body.product, quantity: body.quantity} } })
         if(!cart){
-            const newCart = new Cart(req.body.products[0]);
+            const newCart = new Cart({ product: {product: body.product, quantity: body.quantity} });
             const cartt = await newCart.save()
 
             const user_up = await user.updateOne({cart: cartt._id})
-            console.log(user_up)
         }
+        const newcart = await Cart.findById(user.cart)
 
         res.status(200).json({
             message: 'Cart added successfully',
-            cart
+            newcart
         });
     }
     catch(err) {
