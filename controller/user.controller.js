@@ -1,5 +1,6 @@
 const Cart = require('../models/cart.model')
 const User = require('../models/user.model')
+const Product = require('../models/product.model')
 const jwt = require('jsonwebtoken')
 const { createAccessToken } = require('../middleware/auth.middleware')
 
@@ -22,6 +23,7 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
 const addToCart = async (req, res) => {
     const body = req.body[0]
+    console.log(body)
     try {
         const user = await User.findById(req.user.aud)
         // const cart = await Cart.findByIdAndDelete(user.cart)
@@ -83,7 +85,9 @@ const deleteCart = async (req, res) => {
 // get cart of user
 const getCart = async (req, res) => {
     try {
-        const cart = await Cart.find({user: req.user._id}).populate([{path: 'product'}]);
+        const user = await User.findById(req.user.aud)
+        const cart = await Cart.findById(user.cart).populate([{path: 'product.product'}]);
+
         res.status(200).json({
             message: 'Cart fetched successfully',
             cart
