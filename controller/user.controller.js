@@ -86,7 +86,7 @@ const deleteCart = async (req, res) => {
 const getCart = async (req, res) => {
     try {
         const user = await User.findById(req.user.aud)
-        const cart = await Cart.findById(user.cart).populate([{path: 'product.product'}]);
+        const cart = await Cart.findById(user.cart).populate([{path: 'product.product', populate: {path: 'gallery'}}])
 
         res.status(200).json({
             message: 'Cart fetched successfully',
