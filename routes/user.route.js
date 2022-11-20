@@ -7,7 +7,7 @@ const route = express.Router();
 route.post('/refreshToken', getAccessToken);
 route.post('/addcart', auth_user, addToCart);
 route.post('/update/:id', auth_user, updateCart);
-route.post('/delete/:id', auth_user, deleteCart);
+route.delete('/delete/:id', auth_user, deleteCart);
 route.get('/getcart', auth_user, getCart);
 
 module.exports = route;

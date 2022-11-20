@@ -27,9 +27,9 @@ const addToCart = async (req, res) => {
     try {
         const user = await User.findById(req.user.aud)
         // const cart = await Cart.findByIdAndDelete(user.cart)
-        const cart = await Cart.findByIdAndUpdate(user.cart, { "$push": { product: {product: body.product, quantity: body.quantity} } })
+        const cart = await Cart.findByIdAndUpdate(user.cart, { "$push": { product: {product: body.product, quantity: body.quantity, size: body.size, variant: body.variant} } })
         if(!cart){
-            const newCart = new Cart({ product: {product: body.product, quantity: body.quantity} });
+            const newCart = new Cart({ product: {product: body.product, quantity: body.quantity, size: body.size, variant: body.variant} });
             const cartt = await newCart.save()
 
             const user_up = await user.updateOne({cart: cartt._id})

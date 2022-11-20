@@ -11,6 +11,14 @@ const cart = new mongoose.Schema(
                 type: Number,
                 default: 1,
             },
+            size: {
+                type: String,
+                default: "L",
+            },
+            variant: {
+                type: String,
+                default: "Home",
+            },
         }]},
     {
         timestamps: true,
