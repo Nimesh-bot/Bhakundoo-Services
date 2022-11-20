@@ -70,10 +70,14 @@ const updateCart = async (req, res) => {
 }
 const deleteCart = async (req, res) => {
     try {
-        const cart = await Cart.findByIdAndDelete(req.params.id);
+        const user = await User.findById(req.user.aud)
+        const cart = await Cart.findById(user.cart).populate([{path: 'product.product', populate: {path: 'gallery'}}])
+        const newcart = await cart.update({"$pull": {product:{_id: req.params.id}}})
+
+
         res.status(200).json({
             message: 'Cart deleted successfully',
-            cart
+            newcart
         });
     }
     catch(err) {
