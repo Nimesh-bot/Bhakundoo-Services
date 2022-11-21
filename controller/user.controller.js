@@ -1,7 +1,10 @@
+const jwt = require('jsonwebtoken')
+
 const Cart = require('../models/cart.model')
 const User = require('../models/user.model')
 const Product = require('../models/product.model')
-const jwt = require('jsonwebtoken')
+const Order = require('../models/order.model')
+
 const { createAccessToken } = require('../middleware/auth.middleware')
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
@@ -74,7 +77,6 @@ const deleteCart = async (req, res) => {
         const cart = await Cart.findById(user.cart).populate([{path: 'product.product', populate: {path: 'gallery'}}])
         const newcart = await cart.update({"$pull": {product:{_id: req.params.id}}})
 
-
         res.status(200).json({
             message: 'Cart deleted successfully',
             newcart
@@ -121,10 +123,55 @@ const getAccessToken = async(req, res) => {
     }
 }
 
+const createOrder = async (req, res) => {
+    const body = req.body
+    console.log(body)
+    try {
+        const user = await User.findById(req.user.aud)
+        const cart = await Cart.findById(user.cart).populate([{path: 'product.product', populate: {path: 'gallery'}}])
+        const newOrder = new Order({ user: user._id, cart: cart._id, city: body.city, street: body.street, phone: body.phone });
+
+        const order = await newOrder.save()
+        // const user_up = await user.updateOne({order: order._id})
+        const cart_up = await cart.updateOne({order: order._id})
+        const cart_del = await Cart.findByIdAndDelete(user.cart)
+        const user_up = await user.updateOne({cart: null})
+
+        res.status(200).json({
+            message: 'Order created successfully',
+            order
+        });
+    }
+    catch(err) {
+        res.status(400).json({
+            message: err.message
+        });
+    }
+}
+
+const getOrders = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.aud)
+        const orders = await Order.find({user: user._id}).populate([{path: 'cart', populate: {path: 'product.product', populate: {path: 'gallery'}}}])
+
+        res.status(200).json({
+            message: 'Orders fetched successfully',
+            orders
+        });
+    }
+    catch(err) {
+        res.status(400).json({
+            message: err.message
+        });
+    }
+}
+
 module.exports = {
     addToCart,
     updateCart,
     deleteCart,
     getCart,
-    getAccessToken
+    getAccessToken,
+    createOrder,
+    getOrders
 }

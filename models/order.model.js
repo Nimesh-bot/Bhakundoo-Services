@@ -1,29 +1,24 @@
 const mongoose = require('mongoose');
 
-const ACCESS_TOKEN_SECRET = require()
-
 const order = new mongoose.Schema({
     userId: {
         type: String,
         required: true
     },
-    products: [
-        {
-            productId: {
-                type: String
-            },
-            quantity: {
-                type: Number,
-                default: 1
-            },
-        },
-    ],
-    amount: {
-        type: Number,
+    cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cart"
+    },
+    city: {
+        type: String,
         required: true
     },
-    address: {
-        type: Object,
+    street: {
+        type: String,
+        required: true
+    },
+    phone: {
+        type: String,
         required: true
     },
     status: {
