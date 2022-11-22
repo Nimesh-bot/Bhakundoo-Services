@@ -10,7 +10,7 @@ const order = new mongoose.Schema({
             // type: String,
             type: mongoose.Schema.Types.ObjectId,
             ref: "Product",
-            index: {unique: true}
+            // index: {unique: true}
         },
         quantity: {
             type: Number,
