@@ -5,10 +5,26 @@ const order = new mongoose.Schema({
         type: String,
         required: true
     },
-    cart: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Cart"
-    },
+    cart: [{
+        product: {
+            // type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product",
+            index: {unique: true}
+        },
+        quantity: {
+            type: Number,
+            default: 1,
+        },
+        size: {
+            type: String,
+            default: "L",
+        },
+        variant: {
+            type: String,
+            default: "Home",
+        },
+    }],
     city: {
         type: String,
         required: true
