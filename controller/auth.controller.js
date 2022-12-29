@@ -4,8 +4,10 @@ const bcrypt = require('bcrypt')
 const {google} = require('googleapis')
 const jwt = require('jsonwebtoken')
 const userModel = require('../models/user.model')
+require('dotenv').config({ path: './.env' });
 
-const { access_token } = require('../services/generateToken')
+
+const { access_token, refresh_token } = require('../services/generateToken')
 
 const {OAuth2} = google.auth
 const MAILING_SERVICE_CLIENT_ID = process.env.MAILING_SERVICE_CLIENT_ID
@@ -32,25 +34,16 @@ const googleLogin =  async (req, res) => {
         const user = await Users.findOne({email})
 
         if(user){
-            const isMatch = await bcrypt.compare(password, user.password)
+            const isMatch = bcrypt.compare(password, user.password)
             if(!isMatch) return res.status(400).json({msg: "Password is incorrect."})
 
             const accessToken = await access_token(user._id)
-            // const refresh_token = await refresh_token(user._id)
-
-            // const refresh_token = createRefreshToken({id: user._id})
-            // res.cookie('refreshtoken', refresh_token, {
-            //     httpOnly: true,
-            //     path: '/',
-            //     maxAge: 7*24*60*60*1000,
-            //     domain: 'localhost:3000',
-            //     sameSite: 'None',
-            //     secure: false, // 7 days
-            // }).json(user)
+            const refreshToken = await refresh_token(user._id)
 
             res.status(200).json({
                 user,
-                accessToken
+                accessToken,
+                refreshToken,
             })
 
             // res.json(user)

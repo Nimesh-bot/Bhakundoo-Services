@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cookieParser())
 app.use(morgan('dev'));
 app.use(cors({
-    origin: '*', // allow to server to accept request from different origin
+    origin: '*',
     credentials: true
 }));
 
